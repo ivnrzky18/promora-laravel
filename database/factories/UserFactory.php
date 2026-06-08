@@ -29,6 +29,10 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
+            'role' => 'consumer',
+            'phone' => null,
+            'avatar' => null,
+            'location' => null,
             'remember_token' => Str::random(10),
         ];
     }
@@ -40,6 +44,36 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is a consumer.
+     */
+    public function consumer(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'consumer',
+        ]);
+    }
+
+    /**
+     * Indicate that the user is a seller.
+     */
+    public function seller(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'seller',
+        ]);
+    }
+
+    /**
+     * Indicate that the user is an admin.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'admin',
         ]);
     }
 }
