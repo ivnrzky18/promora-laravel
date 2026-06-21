@@ -13,11 +13,12 @@ class HomeController extends Controller
      */
     public function index(): View
     {
-        $latestPromos = Promo::active()
-            ->with(['seller', 'category'])
-            ->latest()
-            ->take(6)
-            ->get();
+$latestPromos = Promo::active()
+    ->with(['seller', 'category'])
+    ->orderByDesc('is_premium')
+    ->latest()
+    ->take(6)
+    ->get();
 
         $hotDeals = Promo::hotDeals()
             ->with(['seller', 'category'])

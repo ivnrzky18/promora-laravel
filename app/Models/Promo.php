@@ -8,45 +8,37 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Promo extends Model
 {
     use HasFactory, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = [
-        'seller_id',
-        'category_id',
-        'title',
-        'description',
-        'poster_image',
-        'discount_percentage',
-        'original_price',
-        'promo_price',
-        'start_date',
-        'end_date',
-        'is_hot_deal',
-        'view_count',
-        'status',
-    ];
+protected $fillable = [
+    'seller_id',
+    'category_id',
+    'title',
+    'description',
+    'poster_image',
+    'discount_percentage',
+    'original_price',
+    'promo_price',
+    'start_date',
+    'end_date',
+    'status',
+    'is_premium'
+];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'start_date' => 'date',
-            'end_date' => 'date',
-            'is_hot_deal' => 'boolean',
-        ];
-    }
+protected function casts(): array
+{
+    return [
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'is_hot_deal' => 'boolean',
+        'is_premium' => 'boolean',
+    ];
+}
 
     // ─── Relationships ────────────────────────────────────────────────────────
 
@@ -65,6 +57,14 @@ class Promo extends Model
         return $this->hasMany(Bookmark::class);
     }
 
+    // ─── Accessors ───────────────────────────────────────────────────────────
+
+   public function getPosterUrlAttribute()
+{
+    return $this->poster_image
+        ? asset('storage/' . $this->poster_image)
+        : asset('images/no-image.png');
+}
     // ─── Scopes ───────────────────────────────────────────────────────────────
 
     public function scopeActive(Builder $query): Builder

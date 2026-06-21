@@ -24,6 +24,10 @@ class Event extends Model
         'end_date',
         'poster_image',
         'status',
+
+        // PREMIUM
+        'is_premium',
+        'premium_price',
     ];
 
     /**
@@ -34,15 +38,37 @@ class Event extends Model
     protected function casts(): array
     {
         return [
-            'event_date' => 'datetime',
-            'end_date' => 'datetime',
+            'event_date'    => 'datetime',
+            'end_date'      => 'datetime',
+            'is_premium'    => 'boolean',
+            'premium_price' => 'decimal:2',
         ];
     }
 
-    // ─── Relationships ────────────────────────────────────────────────────────
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
 
     public function seller(): BelongsTo
     {
         return $this->belongsTo(SellerProfile::class, 'seller_id');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Scopes
+    |--------------------------------------------------------------------------
+    */
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
+
+    public function scopePremiumFirst($query)
+    {
+        return $query->orderByDesc('is_premium');
     }
 }

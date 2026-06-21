@@ -4,124 +4,166 @@
 
 @push('styles')
 <style>
-    /* FullCalendar overrides for Tailwind compatibility */
+    /* FullCalendar Overrides agar Serasi dengan Desain Promora */
     .fc {
         font-family: inherit;
     }
-    .fc .fc-button {
-        background-color: #f97316;
-        border-color: #f97316;
-        font-weight: 500;
+    /* Mengubah tombol navigasi (Bulan, Minggu, Daftar, Hari Ini) */
+    .fc .fc-button-primary {
+        background-color: #DD3015 !important; /* Merah Promora */
+        border-color: #DD3015 !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        font-size: 0.75rem !important;
+        letter-spacing: 0.05em;
+        padding: 0.6rem 1rem !important;
+        border-radius: 10px !important;
+        transition: all 0.2s ease;
     }
-    .fc .fc-button:hover {
-        background-color: #ea6c0a;
-        border-color: #ea6c0a;
+    .fc .fc-button-primary:hover {
+        background-color: #F30000 !important; /* Merah Cerah saat Hover */
+        border-color: #F30000 !important;
     }
+    .fc .fc-button-primary:disabled {
+        background-color: #DD3015 !important;
+        opacity: 0.5;
+    }
+    /* Tombol Aktif (Misal sedang di tab 'Bulan') berubah jadi Hitam */
     .fc .fc-button-primary:not(:disabled).fc-button-active,
     .fc .fc-button-primary:not(:disabled):active {
-        background-color: #c2540a;
-        border-color: #c2540a;
+        background-color: #000000 !important;
+        border-color: #000000 !important;
     }
-    .fc .fc-button:focus {
-        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.3);
-    }
+    /* Judul Bulan/Tahun di Tengah */
     .fc .fc-toolbar-title {
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: #1f2937;
+        font-size: 1.3rem !important;
+        font-weight: 900 !important;
+        color: #000000 !important;
+        text-transform: uppercase;
+        letter-spacing: -0.025em;
     }
+    /* Header Nama Hari (Sen, Sel, Rab...) */
+    .fc .fc-col-header-cell {
+        background-color: #FFFFFF;
+        padding: 12px 0 !important;
+    }
+    .fc .fc-col-header-cell-cushion {
+        color: #DD3015 !important; /* Teks Hari jadi Merah Promora */
+        font-weight: 800 !important;
+        text-decoration: none !important;
+        font-size: 0.85rem;
+    }
+    /* Angka Tanggal di dalam Kalender */
+    .fc .fc-daygrid-day-number {
+        color: #000000 !important;
+        font-weight: 700 !important;
+        padding: 8px !important;
+        text-decoration: none !important;
+        font-size: 0.85rem;
+    }
+    /* Highlight Hari Ini menggunakan Pink Soft (#F3E1E1) */
+    .fc .fc-daygrid-day.fc-day-today {
+        background-color: #F3E1E1 !important;
+    }
+    /* Styling Pill Judul Event/Promo yang tampil di Kalender */
     .fc .fc-daygrid-event {
-        border-radius: 4px;
-        font-size: 0.75rem;
-        padding: 1px 4px;
+        border-radius: 6px !important;
+        padding: 3px 6px !important;
+        border: none !important;
+        font-size: 0.75rem !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.08) !important;
     }
     .fc .fc-event-title {
-        font-weight: 500;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        font-weight: 700 !important;
+        color: #FFFFFF !important;
     }
-    .fc .fc-col-header-cell-cushion,
-    .fc .fc-daygrid-day-number {
-        color: #374151;
-        text-decoration: none;
-    }
-    .fc .fc-daygrid-day.fc-day-today {
-        background-color: #fff7ed;
+    /* Tampilan List/Daftar */
+    .fc .fc-list-day-cushion {
+        background-color: #F3E1E1 !important;
     }
     .fc .fc-list-event:hover td {
-        background-color: #fff7ed;
+        background-color: #fff1f1 !important;
     }
+    /* Responsif untuk HP */
     @media (max-width: 640px) {
         .fc .fc-toolbar {
-            flex-direction: column;
-            gap: 0.5rem;
+            flex-direction: column !important;
+            gap: 0.75rem !important;
         }
         .fc .fc-toolbar-title {
-            font-size: 1rem;
+            font-size: 1.1rem !important;
         }
     }
 </style>
 @endpush
 
 @section('content')
-<div
-    x-data="calendarApp()"
-    x-init="initCalendar()"
-    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
->
-    {{-- Page Header --}}
-    <div class="mb-6">
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Kalender Promo & Event</h1>
-        <p class="mt-1 text-sm text-gray-500">Temukan promo dan acara UMKM lokal di sekitar Anda</p>
-    </div>
+<!-- Background Utama diset ke #F3E1E1 (Pink Soft) -->
+<div x-data="calendarApp()" x-init="initCalendar()" class="min-h-screen bg-[#F3E1E1] py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {{-- Page Header --}}
+        <div class="mb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4 bg-white p-6 rounded-2xl border border-[#DD3015]/10 shadow-sm">
+            <div>
+                <span class="inline-block text-xs font-black tracking-widest text-[#DD3015] uppercase mb-1">AGENDA UMKM</span>
+                <h1 class="text-3xl sm:text-4xl font-black text-black tracking-tight">
+                    KALENDER <span class="text-[#DD3015]">PROMO</span> & EVENT
+                </h1>
+                <p class="mt-1 text-sm text-gray-500">Temukan promo hemat dan acara seru dari UMKM lokal di sekitar Anda</p>
+            </div>
 
-    {{-- Legend + Filter Row --}}
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-
-        {{-- Legend --}}
-        <div class="flex items-center gap-4 text-sm text-gray-600">
-            <span class="flex items-center gap-1.5">
-                <span class="inline-block w-3 h-3 rounded-sm bg-orange-500"></span>
-                Promo
-            </span>
-            <span class="flex items-center gap-1.5">
-                <span class="inline-block w-3 h-3 rounded-sm bg-blue-500"></span>
-                Event
-            </span>
+            {{-- Legend Warna --}}
+            <div class="flex items-center gap-4 text-xs font-bold uppercase tracking-wider bg-gray-50 px-4 py-2 rounded-xl border border-gray-100">
+                <span class="flex items-center gap-2">
+                    <span class="inline-block w-3 h-3 rounded-full bg-[#DD3015]"></span>
+                    Promo (Merah)
+                </span>
+                <span class="flex items-center gap-2 border-l pl-4 border-gray-200">
+                    <span class="inline-block w-3 h-3 rounded-full bg-black"></span>
+                    Event (Hitam)
+                </span>
+            </div>
         </div>
 
-        {{-- Category Filter --}}
-        <div class="flex items-center gap-2">
-            <label for="category-filter" class="text-sm font-medium text-gray-700 whitespace-nowrap">
-                Filter Kategori:
-            </label>
-            <select
-                id="category-filter"
-                x-model="selectedCategoryId"
-                @change="onCategoryChange()"
-                class="block w-full sm:w-auto rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200 min-h-[44px]"
-            >
-                <option value="">Semua Kategori</option>
-                @foreach($categories as $category)
-                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                @endforeach
-            </select>
+        {{-- Filter Row --}}
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+                <label for="category-filter" class="text-xs font-black text-black uppercase tracking-wider whitespace-nowrap">
+                    Kategori:
+                </label>
+                <div class="relative flex-1 sm:flex-none">
+                    <select
+                        id="category-filter"
+                        x-model="selectedCategoryId"
+                        @change="onCategoryChange()"
+                        class="block w-full sm:w-64 rounded-xl border border-gray-200 bg-white px-4 py-2.5 pr-10 text-sm font-bold text-black shadow-sm focus:border-[#DD3015] focus:outline-none focus:ring-2 focus:ring-[#DD3015]/20 min-h-[44px] appearance-none cursor-pointer"
+                    >
+                        <option value="">SEMUA KATEGORI</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}">{{ strtoupper($category->name) }}</option>
+                        @endforeach
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-[#DD3015]">
+                        <svg class="h-4 w-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        {{-- Kalender Utama (FullCalendar akan di-render di sini) --}}
+        <div class="bg-white rounded-3xl shadow-xl border border-[#DD3015]/10 p-4 sm:p-6">
+            <div id="calendar"></div>
+        </div>
+
     </div>
 
-    {{-- Calendar Container --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
-        <div id="calendar"></div>
-    </div>
-
-    {{-- Event Detail Modal --}}
+    {{-- Event Detail Modal Pop-up --}}
     <div
         x-show="modalOpen"
-        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100"
-        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave="transition ease-in duration-200"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
         class="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -129,113 +171,106 @@
         @keydown.escape.window="modalOpen = false"
         style="display: none;"
     >
-        {{-- Backdrop --}}
-        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        {{-- Backdrop Gelap Lembut --}}
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
 
-        {{-- Modal Panel --}}
+        {{-- Modal Box --}}
         <div
             x-show="modalOpen"
-            x-transition:enter="transition ease-out duration-200"
-            x-transition:enter-start="opacity-0 scale-95"
-            x-transition:enter-end="opacity-100 scale-100"
-            x-transition:leave="transition ease-in duration-150"
-            x-transition:leave-start="opacity-100 scale-100"
-            x-transition:leave-end="opacity-0 scale-95"
-            class="relative w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden z-10"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+            x-transition:leave-end="opacity-0 scale-95 translate-y-4"
+            class="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden z-10 border border-gray-100"
             role="dialog"
             aria-modal="true"
             :aria-labelledby="'modal-title'"
         >
-            {{-- Modal Header --}}
+            {{-- Modal Header: Menyesuaikan warna dinamis (Merah jika promo, Hitam jika event) --}}
             <div
-                class="px-6 py-4 flex items-start justify-between"
-                :class="modalEvent.type === 'promo' ? 'bg-orange-500' : 'bg-blue-500'"
+                class="px-6 py-6 flex items-start justify-between text-white"
+                :class="modalEvent.type === 'promo' ? 'bg-[#DD3015]' : 'bg-black'"
             >
                 <div class="flex-1 min-w-0 pr-4">
                     <span
-                        class="inline-block text-xs font-semibold uppercase tracking-wider text-white/80 mb-1"
-                        x-text="modalEvent.type === 'promo' ? 'Promo' : 'Event'"
+                        class="inline-block px-2.5 py-0.5 bg-[#FFB800] text-black text-[10px] font-black uppercase tracking-widest rounded-md mb-2"
+                        x-text="modalEvent.type"
                     ></span>
                     <h2
                         id="modal-title"
-                        class="text-lg font-bold text-white leading-snug"
+                        class="text-xl font-black leading-tight uppercase tracking-tight"
                         x-text="modalEvent.title"
                     ></h2>
                 </div>
                 <button
                     @click="modalOpen = false"
-                    class="flex-shrink-0 text-white/80 hover:text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg"
+                    class="flex-shrink-0 text-white/80 hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20"
                     aria-label="Tutup modal"
                 >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
                 </button>
             </div>
 
             {{-- Modal Body --}}
-            <div class="px-6 py-5 space-y-4">
+            <div class="px-6 py-6 space-y-5 bg-white">
 
-                {{-- Date Range --}}
-                <div class="flex items-start gap-3">
-                    <div class="flex-shrink-0 mt-0.5">
-                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                {{-- Tanggal --}}
+                <div class="flex items-start gap-3.5">
+                    <div class="w-9 h-9 rounded-xl bg-[#F3E1E1] text-[#DD3015] flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
                     </div>
                     <div>
-                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-0.5">Tanggal</p>
-                        <p class="text-sm text-gray-800" x-text="modalEvent.dateRange"></p>
+                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Masa Berlaku / Pelaksanaan</p>
+                        <p class="text-sm font-bold text-black mt-0.5" x-text="modalEvent.dateRange"></p>
                     </div>
                 </div>
 
-                {{-- Location (for events) --}}
+                {{-- Lokasi (Khusus Event) --}}
                 <template x-if="modalEvent.location">
-                    <div class="flex items-start gap-3">
-                        <div class="flex-shrink-0 mt-0.5">
-                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <div class="flex items-start gap-3.5">
+                        <div class="w-9 h-9 rounded-xl bg-gray-100 text-gray-700 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                             </svg>
                         </div>
                         <div>
-                            <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-0.5">Lokasi</p>
-                            <p class="text-sm text-gray-800" x-text="modalEvent.location"></p>
+                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Tempat / Lokasi</p>
+                            <p class="text-sm font-bold text-black mt-0.5" x-text="modalEvent.location"></p>
                         </div>
                     </div>
                 </template>
 
-                {{-- Seller --}}
+                {{-- Seller / Nama Toko --}}
                 <template x-if="modalEvent.seller">
-                    <div class="flex items-start gap-3">
-                        <div class="flex-shrink-0 mt-0.5">
-                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    <div class="flex items-start gap-3.5">
+                        <div class="w-9 h-9 rounded-xl bg-gray-100 text-gray-700 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                             </svg>
                         </div>
                         <div>
-                            <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-0.5">UMKM</p>
-                            <p class="text-sm text-gray-800" x-text="modalEvent.seller"></p>
+                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-wider">Mitra UMKM</p>
+                            <p class="text-sm font-bold text-black mt-0.5" x-text="modalEvent.seller"></p>
                         </div>
                     </div>
                 </template>
 
-                {{-- Discount (for promos) --}}
+                {{-- Informasi Diskon (Khusus Promo) --}}
                 <template x-if="modalEvent.discount">
-                    <div class="flex items-start gap-3">
-                        <div class="flex-shrink-0 mt-0.5">
-                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
-                            </svg>
+                    <div class="p-3 bg-[#F30000]/5 border border-[#F30000]/10 rounded-2xl flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-[#F30000] text-[#FFB800] flex items-center justify-center flex-shrink-0 font-bold text-lg">
+                            %
                         </div>
                         <div>
-                            <p class="text-xs font-medium text-gray-500 uppercase tracking-wider mb-0.5">Diskon</p>
-                            <p class="text-sm font-semibold text-orange-600" x-text="modalEvent.discount"></p>
+                            <p class="text-[10px] font-black text-[#F30000] uppercase tracking-wider">Keuntungan Diskoni</p>
+                            <p class="text-base font-black text-[#F30000]" x-text="modalEvent.discount"></p>
                         </div>
                     </div>
                 </template>
@@ -243,23 +278,23 @@
             </div>
 
             {{-- Modal Footer --}}
-            <div class="px-6 pb-5 flex flex-col sm:flex-row gap-3">
+            <div class="px-6 pb-6 pt-2 bg-gray-50 flex flex-col gap-2">
                 <template x-if="modalEvent.url && modalEvent.url !== '#'">
                     <a
                         :href="modalEvent.url"
-                        class="flex-1 inline-flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold text-sm px-4 py-3 rounded-lg transition-colors min-h-[44px]"
+                        class="w-full inline-flex items-center justify-center gap-2 bg-[#DD3015] hover:bg-black text-white font-black text-xs uppercase tracking-widest py-3.5 rounded-xl transition-all shadow-md shadow-red-600/10"
                     >
-                        Lihat Detail
+                        Buka Halaman Promo
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                         </svg>
                     </a>
                 </template>
                 <button
                     @click="modalOpen = false"
-                    class="flex-1 inline-flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-sm px-4 py-3 rounded-lg transition-colors min-h-[44px]"
+                    class="w-full py-3 text-xs font-bold uppercase text-gray-400 hover:text-black transition-colors"
                 >
-                    Tutup
+                    Kembali ke Kalender
                 </button>
             </div>
         </div>
@@ -268,7 +303,7 @@
 @endsection
 
 @push('scripts')
-{{-- FullCalendar from CDN --}}
+{{-- FullCalendar Engine CDN --}}
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
 <script>
@@ -318,21 +353,16 @@ function calendarApp() {
                     },
                 },
                 eventClick: function (info) {
-                    // Prevent FullCalendar's default navigation to event URL
                     info.jsEvent.preventDefault();
 
                     const event = info.event;
                     const props = event.extendedProps;
-
-                    // Determine type from event id prefix
                     const isPromo = event.id.startsWith('promo-');
 
-                    // Build human-readable date range
                     let dateRange = '';
                     if (event.start) {
                         const startStr = self.formatDate(event.start);
                         if (event.end) {
-                            // FullCalendar end is exclusive for all-day events; subtract 1 day for display
                             const displayEnd = new Date(event.end);
                             if (isPromo) {
                                 displayEnd.setDate(displayEnd.getDate() - 1);
@@ -357,8 +387,15 @@ function calendarApp() {
                     self.modalOpen = true;
                 },
                 eventDidMount: function (info) {
-                    // Add a pointer cursor to all events
                     info.el.style.cursor = 'pointer';
+                    
+                    // WARNA PILL EVENT DI KALENDER:
+                    // Jika data diawali id 'promo-', pil berwarna Merah Promora (#DD3015). Jika tidak, Hitam Murni (#000000)
+                    if (info.event.id.startsWith('promo-')) {
+                        info.el.style.backgroundColor = '#DD3015';
+                    } else {
+                        info.el.style.backgroundColor = '#000000';
+                    }
                 },
                 noEventsContent: 'Tidak ada promo atau event untuk ditampilkan.',
             });

@@ -15,16 +15,56 @@ class SellerController extends Controller
      */
     public function dashboard(): View
     {
-        $sellerProfile = auth()->user()->sellerProfile()->with('subscribers')->first();
+        $sellerProfile = auth()->user()->sellerProfile()
+            ->with(['subscribers'])
+            ->first();
 
-        $totalPromos     = $sellerProfile->promos()->count();
-        $totalViews      = $sellerProfile->promos()->sum('view_count');
-        $activePromos    = $sellerProfile->promos()->where('status', 'active')->count();
+        // =========================
+        // PROMO STATS
+        // =========================
+        $totalPromos  = $sellerProfile->promos()->count();
+        $promoViews   = $sellerProfile->promos()->sum('view_count');
+        $activePromos = $sellerProfile->promos()
+            ->where('status', 'active')
+            ->count();
+
+        // =========================
+        // EVENT STATS
+        // =========================
+        $totalEvents = $sellerProfile->events()->count();
+
+        $activeEvents = $sellerProfile->events()
+            ->where(function ($q) {
+                $q->whereNull('end_date')
+                  ->orWhere('end_date', '>=', now());
+            })
+            ->count();
+
+        // kalau tabel events kamu belum punya kolom view_count, pakai 0
+        $eventViews = 0;
+        if (\Schema::hasColumn('events', 'view_count')) {
+            $eventViews = $sellerProfile->events()->sum('view_count');
+        }
+
+        // =========================
+        // OTHER STATS
+        // =========================
         $subscriberCount = $sellerProfile->subscribers()->count();
         $averageRating   = $sellerProfile->averageRating();
+        $totalViews      = $promoViews + $eventViews;
 
+        // =========================
+        // PROMO LIST
+        // =========================
         $promos = $sellerProfile->promos()
             ->with('category')
+            ->latest()
+            ->get();
+
+        // =========================
+        // EVENT LIST
+        // =========================
+        $events = $sellerProfile->events()
             ->latest()
             ->get();
 
@@ -35,7 +75,12 @@ class SellerController extends Controller
             'activePromos',
             'subscriberCount',
             'averageRating',
-            'promos'
+            'promos',
+
+            // event data
+            'totalEvents',
+            'activeEvents',
+            'events'
         ));
     }
 
@@ -76,7 +121,6 @@ class SellerController extends Controller
         ]);
 
         if ($request->hasFile('logo')) {
-            // Delete old logo if exists
             if ($sellerProfile->logo) {
                 Storage::disk('public')->delete($sellerProfile->logo);
             }
@@ -86,6 +130,8 @@ class SellerController extends Controller
 
         $sellerProfile->update($data);
 
-        return redirect()->back()->with('success', 'Profil berhasil diperbarui.');
+        return redirect()
+            ->route('seller.dashboard')
+            ->with('success', 'Profil berhasil diperbarui.');
     }
 }

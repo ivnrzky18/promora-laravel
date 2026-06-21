@@ -3,16 +3,24 @@
 @php
     $bookmarkCount = $promo->bookmarks_count ?? $promo->bookmarks()->count();
     $toggleRoute = auth()->check() ? route('consumer.bookmarks.toggle', $promo) : null;
+
+    // Support both external URLs (http) and local storage paths
+    $imageUrl = $promo->poster_image
+        ? (Str::startsWith($promo->poster_image, 'http')
+            ? $promo->poster_image
+            : asset('storage/' . $promo->poster_image))
+        : null;
 @endphp
 
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow flex flex-col">
 
     {{-- Poster Image --}}
     <div class="relative aspect-video bg-gray-100 overflow-hidden">
-        @if($promo->poster_image)
-            <img src="{{ asset('storage/' . $promo->poster_image) }}"
+        @if($imageUrl)
+            <img src="{{ $imageUrl }}"
                  alt="{{ $promo->title }}"
-                 class="w-full h-full object-cover">
+                 class="w-full h-full object-cover"
+                 onerror="this.parentElement.innerHTML='<div class=\'w-full h-full flex items-center justify-center bg-gradient-to-br from-orange-100 to-orange-200\'><svg class=\'w-12 h-12 text-orange-300\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z\'/></svg></div>'">
         @else
             <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-orange-100 to-orange-200">
                 <svg class="w-12 h-12 text-orange-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -22,12 +30,19 @@
             </div>
         @endif
 
-        {{-- Discount Badge --}}
-        @if($promo->discount_percentage)
-            <div class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                {{ number_format($promo->discount_percentage, 0) }}% OFF
-            </div>
-        @endif
+{{-- Premium Badge --}}
+@if($promo->is_premium)
+    <div class="absolute top-2 left-2 bg-yellow-400 text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+        ⭐ Premium
+    </div>
+@endif
+
+{{-- Discount Badge --}}
+@if($promo->discount_percentage)
+    <div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+        -{{ number_format($promo->discount_percentage, 0) }}%
+    </div>
+@endif
 
         {{-- Hot Deal Badge --}}
         @if($promo->is_hot_deal)
@@ -41,10 +56,19 @@
     <div class="p-4 flex flex-col flex-1">
 
         {{-- Title --}}
-        <h3 class="font-semibold text-gray-800 text-sm leading-snug line-clamp-2 mb-2">
-            {{ $promo->title }}
-        </h3>
+<div class="flex items-center gap-2 mb-2">
 
+    @if($promo->is_premium)
+        <span class="bg-yellow-100 text-yellow-700 text-[10px] font-bold px-2 py-1 rounded-full">
+            ⭐ Premium
+        </span>
+    @endif
+
+</div>
+
+<h3 class="font-semibold text-gray-800 text-sm leading-snug line-clamp-2 mb-2">
+    {{ $promo->title }}
+</h3>
         {{-- Seller Name --}}
         <p class="text-xs text-gray-500 mb-1 truncate">
             <svg class="w-3 h-3 inline mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,9 +78,22 @@
             {{ $promo->seller->business_name ?? 'Seller' }}
         </p>
 
+        {{-- Location --}}
+        @if($promo->seller?->address)
+            <p class="text-xs text-gray-400 mb-1 truncate">
+                <svg class="w-3 h-3 inline mr-1 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                {{ $promo->seller->address }}
+            </p>
+        @endif
+
         {{-- Average Rating --}}
         <div class="flex items-center space-x-1 mb-2">
-            @php $rating = $promo->seller->averageRating() ?? 0; @endphp
+            @php $rating = $promo->seller?->averageRating() ?? 0; @endphp
             @for($i = 1; $i <= 5; $i++)
                 <svg class="w-3 h-3 {{ $i <= round($rating) ? 'text-yellow-400' : 'text-gray-200' }}"
                      fill="currentColor" viewBox="0 0 20 20">

@@ -10,9 +10,6 @@ use Illuminate\View\View;
 
 class EventController extends Controller
 {
-    /**
-     * Display a listing of the seller's events.
-     */
     public function index(): View
     {
         $events = auth()->user()->sellerProfile
@@ -23,36 +20,50 @@ class EventController extends Controller
         return view('seller.events.index', compact('events'));
     }
 
-    /**
-     * Show the form for creating a new event.
-     */
     public function create(): View
     {
         return view('seller.events.create');
     }
 
-    /**
-     * Store a newly created event in storage.
-     */
-    public function store(StoreEventRequest $request): RedirectResponse
-    {
+   public function store(StoreEventRequest $request): RedirectResponse
+{
+    try {
+        $sellerProfile = auth()->user()->sellerProfile;
+
+        if (!$sellerProfile) {
+            return back()->with('error', 'Seller profile tidak ditemukan.');
+        }
+
         $data = $request->validated();
 
         if ($request->hasFile('poster_image')) {
             $data['poster_image'] = $request->file('poster_image')->store('events', 'public');
         }
 
-        $data['seller_id'] = auth()->user()->sellerProfile->id;
+        $data['seller_id'] = $sellerProfile->id;
+        $data['status'] = 'active';
+        $data['is_premium'] = $request->boolean('is_premium');
+
+        if ($data['is_premium']) {
+            $data['premium_price'] = $request->input('premium_price', 20000);
+        } else {
+            $data['premium_price'] = null;
+        }
 
         Event::create($data);
 
-        return redirect()->route('seller.events.index')
+        return redirect()
+            ->route('seller.events.index')
             ->with('success', 'Event berhasil dibuat.');
+    } catch (\Throwable $e) {
+        dd([
+            'message' => $e->getMessage(),
+            'file'    => $e->getFile(),
+            'line'    => $e->getLine(),
+            'trace'   => $e->getTraceAsString(),
+        ]);
     }
-
-    /**
-     * Show the form for editing the specified event.
-     */
+}
     public function edit(Event $event): View
     {
         abort_if($event->seller_id !== auth()->user()->sellerProfile->id, 403);
@@ -60,9 +71,6 @@ class EventController extends Controller
         return view('seller.events.edit', compact('event'));
     }
 
-    /**
-     * Update the specified event in storage.
-     */
     public function update(StoreEventRequest $request, Event $event): RedirectResponse
     {
         abort_if($event->seller_id !== auth()->user()->sellerProfile->id, 403);
@@ -70,7 +78,6 @@ class EventController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('poster_image')) {
-            // Delete old poster if exists
             if ($event->poster_image) {
                 Storage::disk('public')->delete($event->poster_image);
             }
@@ -78,27 +85,35 @@ class EventController extends Controller
             $data['poster_image'] = $request->file('poster_image')->store('events', 'public');
         }
 
+        $data['is_premium'] = $request->boolean('is_premium');
+
+        if ($data['is_premium']) {
+            $data['premium_price'] = $request->filled('premium_price')
+                ? $request->premium_price
+                : 20000;
+        } else {
+            $data['premium_price'] = null;
+        }
+
         $event->update($data);
 
-        return redirect()->route('seller.events.index')
+        return redirect()
+            ->route('seller.events.index')
             ->with('success', 'Event berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified event from storage.
-     */
     public function destroy(Event $event): RedirectResponse
     {
         abort_if($event->seller_id !== auth()->user()->sellerProfile->id, 403);
 
-        // Delete poster if exists
         if ($event->poster_image) {
             Storage::disk('public')->delete($event->poster_image);
         }
 
         $event->delete();
 
-        return redirect()->route('seller.events.index')
+        return redirect()
+            ->route('seller.events.index')
             ->with('success', 'Event berhasil dihapus.');
     }
 }

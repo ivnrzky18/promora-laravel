@@ -19,6 +19,7 @@ use App\Http\Controllers\SellerController;
 use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 
+
 // ─── Public Routes ────────────────────────────────────────────────────────────
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar');

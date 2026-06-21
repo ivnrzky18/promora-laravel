@@ -3,20 +3,79 @@
 @section('title', 'Dashboard Admin - Promora')
 
 @section('content')
-<div class="space-y-6">
+<div style="padding: 28px 24px; max-width: 1100px; margin: 0 auto;">
 
     {{-- Page Header --}}
-    <div>
-        <h1 class="text-2xl font-bold text-gray-800">Dashboard Admin</h1>
-        <p class="text-gray-500 mt-1">Kelola verifikasi seller yang menunggu persetujuan.</p>
+    <div style="margin-bottom: 28px;">
+        <h1 style="font-size: 22px; font-weight: 700; color: #DD3015; letter-spacing: -0.3px;">
+            Dashboard Admin
+        </h1>
+        <p style="font-size: 14px; color: #9e6e6e; margin-top: 4px;">
+            Kelola verifikasi seller yang menunggu persetujuan.
+        </p>
+    </div>
+
+    {{-- Stat Cards --}}
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px;">
+
+        {{-- Pending --}}
+        <div style="background: #fff; border-radius: 14px; padding: 18px 20px; border: 1px solid rgba(221,48,21,0.10); display: flex; align-items: center; gap: 14px;">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(255,184,0,0.15); color: #b98200; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            <div>
+                <div style="font-size: 12px; color: #aaa; font-weight: 500;">Menunggu Verifikasi</div>
+                <div style="font-size: 22px; font-weight: 700; color: #b98200; line-height: 1.2;">
+                    {{ $pendingSellers->count() }}
+                </div>
+            </div>
+        </div>
+
+        {{-- Verified --}}
+        <div style="background: #fff; border-radius: 14px; padding: 18px 20px; border: 1px solid rgba(221,48,21,0.10); display: flex; align-items: center; gap: 14px;">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(34,197,94,0.12); color: #16a34a; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            <div>
+                <div style="font-size: 12px; color: #aaa; font-weight: 500;">Seller Terverifikasi</div>
+                <div style="font-size: 22px; font-weight: 700; color: #16a34a; line-height: 1.2;">
+                    {{ $verifiedSellers ?? 0 }}
+                </div>
+            </div>
+        </div>
+
+        {{-- Total --}}
+        <div style="background: #fff; border-radius: 14px; padding: 18px 20px; border: 1px solid rgba(221,48,21,0.10); display: flex; align-items: center; gap: 14px;">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(221,48,21,0.10); color: #DD3015; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/>
+                </svg>
+            </div>
+            <div>
+                <div style="font-size: 12px; color: #aaa; font-weight: 500;">Total Seller</div>
+                <div style="font-size: 22px; font-weight: 700; color: #222; line-height: 1.2;">
+                    {{ $totalSellers ?? 0 }}
+                </div>
+            </div>
+        </div>
+
     </div>
 
     {{-- Pending Sellers Table --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-            <h2 class="text-lg font-semibold text-gray-800">Seller Menunggu Verifikasi</h2>
+    <div style="background: #fff; border-radius: 16px; border: 1px solid rgba(221,48,21,0.12); overflow: hidden;">
+
+        {{-- Card Header --}}
+        <div style="padding: 18px 24px; border-bottom: 1px solid rgba(221,48,21,0.10); display: flex; align-items: center; justify-content: space-between; background: linear-gradient(90deg, #DD3015 0%, #c0280e 100%);">
+            <h2 style="font-size: 15px; font-weight: 600; color: #fff;">
+                Seller Menunggu Verifikasi
+            </h2>
             @if($pendingSellers->isNotEmpty())
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                <span style="display: inline-flex; align-items: center; gap: 5px; padding: 3px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; background: #FFB800; color: #7a5500;">
+                    <svg width="8" height="8" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
                     {{ $pendingSellers->count() }} pending
                 </span>
             @endif
@@ -24,79 +83,100 @@
 
         @if($pendingSellers->isEmpty())
             {{-- Empty State --}}
-            <div class="px-6 py-12 text-center">
-                <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <h3 class="mt-3 text-sm font-medium text-gray-700">Tidak ada seller yang menunggu verifikasi</h3>
-                <p class="mt-1 text-sm text-gray-400">Semua seller sudah diverifikasi.</p>
+            <div style="padding: 56px 24px; text-align: center;">
+                <div style="width: 52px; height: 52px; border-radius: 50%; background: #F3E1E1; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px;">
+                    <svg width="26" height="26" fill="none" stroke="#DD3015" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h3 style="font-size: 14px; font-weight: 500; color: #555;">Tidak ada seller yang menunggu verifikasi</h3>
+                <p style="font-size: 13px; color: #aaa; margin-top: 4px;">Semua seller sudah diverifikasi.</p>
             </div>
+
         @else
             {{-- Table --}}
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-100">
-                    <thead class="bg-gray-50">
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; min-width: 680px;">
+                    <thead style="background: #fdf4f2;">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            <th style="padding: 11px 20px; text-align: left; font-size: 11px; font-weight: 700; color: #DD3015; text-transform: uppercase; letter-spacing: 0.6px;">
                                 Nama Bisnis
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                Kategori Bisnis
+                            <th style="padding: 11px 20px; text-align: left; font-size: 11px; font-weight: 700; color: #DD3015; text-transform: uppercase; letter-spacing: 0.6px;">
+                                Kategori
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            <th style="padding: 11px 20px; text-align: left; font-size: 11px; font-weight: 700; color: #DD3015; text-transform: uppercase; letter-spacing: 0.6px;">
                                 Alamat
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            <th style="padding: 11px 20px; text-align: left; font-size: 11px; font-weight: 700; color: #DD3015; text-transform: uppercase; letter-spacing: 0.6px;">
                                 Tanggal Daftar
                             </th>
-                            <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            <th style="padding: 11px 20px; text-align: right; font-size: 11px; font-weight: 700; color: #DD3015; text-transform: uppercase; letter-spacing: 0.6px;">
                                 Aksi
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-100">
+                    <tbody>
                         @foreach($pendingSellers as $seller)
-                            <tr class="hover:bg-gray-50 transition-colors">
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center space-x-3">
+                            <tr style="border-top: 1px solid rgba(221,48,21,0.07);"
+                                onmouseover="this.style.background='#fdf4f2'"
+                                onmouseout="this.style.background='transparent'">
+
+                                {{-- Nama Bisnis --}}
+                                <td style="padding: 14px 20px; vertical-align: middle;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
                                         @if($seller->logo)
                                             <img src="{{ Storage::url($seller->logo) }}"
                                                  alt="{{ $seller->business_name }}"
-                                                 class="w-10 h-10 rounded-full object-cover flex-shrink-0">
+                                                 style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0;">
                                         @else
-                                            <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-                                                <span class="text-red-600 font-semibold text-sm">
-                                                    {{ strtoupper(substr($seller->business_name, 0, 1)) }}
-                                                </span>
+                                            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #DD3015, #F30000); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: #fff; flex-shrink: 0;">
+                                                {{ strtoupper(substr($seller->business_name, 0, 1)) }}
                                             </div>
                                         @endif
                                         <div>
-                                            <p class="text-sm font-semibold text-gray-800">{{ $seller->business_name }}</p>
-                                            <p class="text-xs text-gray-400">{{ $seller->user->email }}</p>
+                                            <div style="font-size: 13px; font-weight: 600; color: #222;">{{ $seller->business_name }}</div>
+                                            <div style="font-size: 12px; color: #aaa; margin-top: 1px;">{{ $seller->user->email }}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-600">
-                                    {{ $seller->business_category }}
+
+                                {{-- Kategori --}}
+                                <td style="padding: 14px 20px; vertical-align: middle;">
+                                    <span style="display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: rgba(221,48,21,0.09); color: #DD3015;">
+                                        {{ $seller->business_category }}
+                                    </span>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">
-                                    {{ $seller->address }}
+
+                                {{-- Alamat --}}
+                                <td style="padding: 14px 20px; vertical-align: middle;">
+                                    <div style="font-size: 13px; color: #666; max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                        {{ $seller->address }}
+                                    </div>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-500">
-                                    {{ $seller->created_at->format('d M Y') }}
+
+                                {{-- Tanggal --}}
+                                <td style="padding: 14px 20px; vertical-align: middle;">
+                                    <span style="font-size: 12px; color: #aaa;">
+                                        {{ $seller->created_at->format('d M Y') }}
+                                    </span>
                                 </td>
-                                <td class="px-6 py-4 text-right">
-                                    <div class="flex items-center justify-end space-x-2">
+
+                                {{-- Aksi --}}
+                                <td style="padding: 14px 20px; vertical-align: middle;">
+                                    <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px;">
+
                                         {{-- Setujui --}}
                                         <form method="POST"
                                               action="{{ route('admin.sellers.verify', $seller) }}"
                                               onsubmit="return confirm('Setujui seller {{ addslashes($seller->business_name) }}?')">
                                             @csrf
                                             <button type="submit"
-                                                    class="inline-flex items-center px-3 py-2 bg-green-500 text-white text-xs font-medium rounded-lg hover:bg-green-600 transition-colors min-h-[44px]">
-                                                <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                                    style="display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; background: #22c55e; color: #fff; min-height: 36px; transition: background 0.15s;"
+                                                    onmouseover="this.style.background='#16a34a'"
+                                                    onmouseout="this.style.background='#22c55e'">
+                                                <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
                                                 </svg>
                                                 Setujui
                                             </button>
@@ -109,22 +189,37 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
-                                                    class="inline-flex items-center px-3 py-2 bg-red-500 text-white text-xs font-medium rounded-lg hover:bg-red-600 transition-colors min-h-[44px]">
-                                                <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                                    style="display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; background: #DD3015; color: #fff; min-height: 36px; transition: background 0.15s;"
+                                                    onmouseover="this.style.background='#F30000'"
+                                                    onmouseout="this.style.background='#DD3015'">
+                                                <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
                                                 </svg>
                                                 Tolak
                                             </button>
                                         </form>
+
                                     </div>
                                 </td>
+
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
         @endif
+
     </div>
 
 </div>
+
+{{-- Background page --}}
+@push('styles')
+<style>
+    body, .admin-content-wrapper {
+        background-color: #F3E1E1 !important;
+    }
+</style>
+@endpush
+
 @endsection

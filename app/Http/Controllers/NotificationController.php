@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 class NotificationController extends Controller
 {
@@ -12,7 +12,8 @@ class NotificationController extends Controller
      */
     public function index(): View
     {
-        $notifications = auth()->user()->notifications()->latest()->get();
+        // Menggunakan paginasi agar halaman rapi jika notifikasi sudah banyak
+        $notifications = auth()->user()->notifications()->latest()->paginate(10);
 
         return view('consumer.notifications', compact('notifications'));
     }
@@ -20,11 +21,11 @@ class NotificationController extends Controller
     /**
      * Mark a specific notification as read.
      */
-    public function markRead(string $id): JsonResponse
+    public function markRead(string $id): RedirectResponse
     {
         $notification = auth()->user()->notifications()->findOrFail($id);
         $notification->markAsRead();
 
-        return response()->json(['success' => true]);
+        return redirect()->back()->with('success', 'Notifikasi berhasil ditandai sebagai dibaca.');
     }
 }
