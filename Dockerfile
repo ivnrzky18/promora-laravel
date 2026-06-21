@@ -1,6 +1,6 @@
 FROM php:8.2-cli
 
-# Install dependency sistem + extension PostgreSQL
+# Install dependency sistem + ekstensi PostgreSQL
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Working directory
+# Set working directory
 WORKDIR /var/www/html
 
 # Copy semua file project
@@ -30,8 +30,8 @@ RUN mkdir -p storage/framework/cache \
     bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-# Expose port Render
-EXPOSE 10000
+# Port Koyeb
+EXPOSE 8000
 
-# Migrate lalu jalankan Laravel
-CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}
+# Jalankan Laravel
+CMD php artisan serve --host=0.0.0.0 --port=8000
