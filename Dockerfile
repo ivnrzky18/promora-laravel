@@ -1,6 +1,6 @@
 FROM php:8.2-cli
 
-# Install system dependencies + ekstensi Laravel
+# Install dependency sistem + extension PostgreSQL
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Set working directory
+# Working directory
 WORKDIR /var/www/html
 
 # Copy semua file project
@@ -22,7 +22,7 @@ COPY . .
 # Install dependency Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# Permission folder Laravel
+# Pastikan folder writable
 RUN mkdir -p storage/framework/cache \
     storage/framework/sessions \
     storage/framework/views \
@@ -30,8 +30,8 @@ RUN mkdir -p storage/framework/cache \
     bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-# Expose port
-EXPOSE 8000
+# Expose port Render
+EXPOSE 10000
 
 # Start Laravel
-CMD php artisan serve --host=0.0.0.0 --port=8000
+CMD php artisan serve --host=0.0.0.0 --port=${PORT:-10000}
