@@ -1,6 +1,6 @@
 FROM php:8.2-cli
 
-# Install system dependencies + extensions yang Laravel butuh
+# Install system dependencies + ekstensi Laravel
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev \
     zip \
-    && docker-php-ext-install pdo pdo_pgsql pgsql
+    && docker-php-ext-install pdo pdo_pgsql pgsql zip
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -22,7 +22,7 @@ COPY . .
 # Install dependency Laravel
 RUN composer install --no-dev --optimize-autoloader
 
-# Buat folder storage/cache aman
+# Permission folder Laravel
 RUN mkdir -p storage/framework/cache \
     storage/framework/sessions \
     storage/framework/views \
@@ -30,8 +30,8 @@ RUN mkdir -p storage/framework/cache \
     bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-# Expose port Render
-EXPOSE 10000
+# Expose port
+EXPOSE 8000
 
-# Start Laravel di port Render
-CMD php artisan serve --host=0.0.0.0 --port=${PORT:-10000}
+# Start Laravel
+CMD php artisan serve --host=0.0.0.0 --port=8000
